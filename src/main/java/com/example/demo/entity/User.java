@@ -24,10 +24,10 @@ public class User {
     @Column(name = "c_name")
     String name;
     @Column(name = "c_age")
-    String age;
+    int age;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "c_passport_id")
+    @JoinColumn(name = "c_passport_id", referencedColumnName = "id")
     Passport passport;
 
     @ManyToMany
