@@ -1,15 +1,12 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Set;
-
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
