@@ -7,7 +7,7 @@ import com.example.demo.DTO.UserDTO;
 import java.util.List;
 
 public interface HobbyService {
-    UserDTO create(UserDTO user);
+    HobbyDTO create(HobbyDTO hobby);
     UserDTO findById(Long id);
     List<UserDTO> getAll();
     UserDTO update(Long id, UserDTO user);

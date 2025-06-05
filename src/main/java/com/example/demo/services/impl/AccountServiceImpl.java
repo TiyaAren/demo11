@@ -23,9 +23,8 @@ public class AccountServiceImpl implements AccountService {
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
 
-
     @Override
-    public AccountDTO create(AccountDTO user) {
+    public AccountDTO create(UserDTO user) {
         return null;
     }
 
@@ -40,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO update(Long id, AccountDTO account) {
+    public AccountDTO update(Long id, UserDTO userDTO) {
         return null;
     }
 

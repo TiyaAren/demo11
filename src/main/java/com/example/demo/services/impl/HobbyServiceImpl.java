@@ -1,5 +1,6 @@
 package com.example.demo.services.impl;
 
+import com.example.demo.DTO.HobbyDTO;
 import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.Hobby;
 import com.example.demo.entity.User;
@@ -22,12 +23,15 @@ public class HobbyServiceImpl implements HobbyService {
     private final HobbyRepository hobbyRepository;
 
     @Override
-    public UserDTO create(UserDTO user) {
-        Set<Hobby> hobbies = user.hobbies().stream()
-                .map(name -> hobbyRepository.findByName(name)
-                        .orElseGet(() -> hobbyRepository.save(Hobby.builder().type(name).build()))).collect(Collectors.toSet());
-        User userToSave = UserMapper.toEntity(user, List.copyOf(hobbies));
-        return UserMapper.toDto(userRepository.save(userToSave));
+    public HobbyDTO create(HobbyDTO hobbydto) {
+        HobbyDTO hobby = hobbyRepository.findByName(String.valueOf(hobbydto))  // Ищем в БД
+                .orElseGet(() -> hobbyRepository.save(          // Если нет — создаём
+                        Hobby.builder().type(hobbydto.type()).build()     // Новое хобби
+                ));
+//        Hobby hobby = user.hobbies().stream()
+//                .map(name -> hobbyRepository.findByName(name).stream();
+
+        return hobby;
     }
 
     @Override
