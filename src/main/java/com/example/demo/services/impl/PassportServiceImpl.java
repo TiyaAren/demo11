@@ -22,7 +22,7 @@ public class PassportServiceImpl implements PassportService {
     }
 
     @Override
-    public PassportDTO getById(Long id) {
+    public PassportDTO findById(Long id) {
         return repository.findById(id)
                 .map(p -> new PassportDTO(p.getNumber()))
                 .orElseThrow(() -> new NoSuchElementException("Passport not found"));

@@ -1,25 +1,19 @@
 package com.example.demo.services.impl;
 
 import com.example.demo.DTO.HobbyDTO;
-import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.Hobby;
-import com.example.demo.entity.User;
-import com.example.demo.mapper.UserMapper;
 import com.example.demo.repositories.HobbyRepository;
-import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.HobbyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+
 public class HobbyServiceImpl implements HobbyService {
-    //    private final UserRepository userRepository;
     private final HobbyRepository hobbyRepository;
 
     @Override

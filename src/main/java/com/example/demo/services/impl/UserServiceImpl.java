@@ -4,14 +4,12 @@ import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.Hobby;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
-import com.example.demo.repositories.AccountRepository;
 import com.example.demo.repositories.HobbyRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
