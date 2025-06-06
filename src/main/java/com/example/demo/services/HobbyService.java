@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface HobbyService {
     HobbyDTO create(HobbyDTO hobby);
-    UserDTO findById(Long id);
-    List<UserDTO> getAll();
-    UserDTO update(Long id, UserDTO user);
+    HobbyDTO findById(Long id);
+    List<HobbyDTO> getAll();
+    HobbyDTO update(Long id, HobbyDTO user);
     void delete(Long id);
 }

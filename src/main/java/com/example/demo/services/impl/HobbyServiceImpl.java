@@ -19,38 +19,38 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class HobbyServiceImpl implements HobbyService {
-    private final UserRepository userRepository;
+    //    private final UserRepository userRepository;
     private final HobbyRepository hobbyRepository;
 
     @Override
     public HobbyDTO create(HobbyDTO hobbydto) {
-        HobbyDTO hobby = hobbyRepository.findByName(String.valueOf(hobbydto))  // Ищем в БД
-                .orElseGet(() -> hobbyRepository.save(          // Если нет — создаём
-                        Hobby.builder().type(hobbydto.type()).build()     // Новое хобби
-                ));
-//        Hobby hobby = user.hobbies().stream()
-//                .map(name -> hobbyRepository.findByName(name).stream();
-
-        return hobby;
+        return new HobbyDTO(hobbyRepository.save(Hobby.builder().type(hobbydto.type()).build()).getType());
     }
 
     @Override
-    public UserDTO findById(Long id) {
-        return null;
+    public HobbyDTO findById(Long id) {
+        return hobbyRepository.findById(id)
+                .map(hobby -> new HobbyDTO(hobby.getType()))
+                .orElseThrow(() -> new NoSuchElementException("Hobby not found"));
     }
 
     @Override
-    public List<UserDTO> getAll() {
-        return List.of();
+    public List<HobbyDTO> getAll() {
+        return hobbyRepository.findAll().stream()
+                .map(hobby -> new HobbyDTO(hobby.getType()))
+                .toList();
     }
 
     @Override
-    public UserDTO update(Long id, UserDTO user) {
-        return null;
+    public HobbyDTO update(Long id, HobbyDTO hobbyDTO) {
+        Hobby existHobby = hobbyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Hobby not found"));
+        existHobby.setType(hobbyDTO.type());
+
+        return new HobbyDTO(hobbyRepository.save(existHobby).getType());
     }
 
     @Override
     public void delete(Long id) {
-
+        hobbyRepository.deleteById(id);
     }
 }

@@ -6,9 +6,9 @@ import com.example.demo.DTO.UserDTO;
 import java.util.List;
 
 public interface AccountService {
-    AccountDTO create(UserDTO user);
+    AccountDTO create(AccountDTO accountDTO);
     AccountDTO findById(Long id);
     List<AccountDTO> getAll();
-    AccountDTO update(Long id, UserDTO userDTO);
+    AccountDTO update(Long id, AccountDTO accountDTO);
     void delete(Long id);
 }
