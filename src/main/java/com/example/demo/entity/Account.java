@@ -7,7 +7,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Entity
 @Table(schema = "users_schema", name = "t_accounts")
 public class Account {

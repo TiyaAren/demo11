@@ -4,12 +4,13 @@ import com.example.demo.DTO.AccountDTO;
 import com.example.demo.entity.Account;
 import com.example.demo.repositories.AccountRepository;
 import com.example.demo.services.AccountService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {

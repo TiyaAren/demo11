@@ -9,7 +9,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Entity
 @Table(schema = "users_schema", name = "t_users")
 public class User {
