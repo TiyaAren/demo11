@@ -10,43 +10,47 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-@Transactional
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-
 public class HobbyServiceImpl implements HobbyService {
+
     private final HobbyRepository hobbyRepository;
 
     @Override
-    public HobbyDTO create(HobbyDTO hobbydto) {
-        return new HobbyDTO(hobbyRepository.save(Hobby.builder().type(hobbydto.type()).build()).getType());
+    public HobbyDTO create(HobbyDTO user) {
+        Hobby hobby = hobbyRepository.save(Hobby.builder().type(user.type()).build());
+        return HobbyDTO.builder().type(hobby.getType()).build();
     }
 
     @Override
     public HobbyDTO findById(Long id) {
-        return hobbyRepository.findById(id)
-                .map(hobby -> new HobbyDTO(hobby.getType()))
-                .orElseThrow(() -> new NoSuchElementException("Hobby not found"));
-    }
+        return HobbyDTO.builder()
+                .type(hobbyRepository.findById(id)
+                        .orElseThrow(() -> new NoSuchElementException("account not found"))
+                        .getType()).build();    }
 
     @Override
     public List<HobbyDTO> getAll() {
         return hobbyRepository.findAll().stream()
-                .map(hobby -> new HobbyDTO(hobby.getType()))
-                .toList();
-    }
+                .map(hobby -> HobbyDTO.builder()
+                        .type(hobby.getType()).build())
+                .collect(Collectors.toList());    }
 
     @Override
-    public HobbyDTO update(Long id, HobbyDTO hobbyDTO) {
-        Hobby existHobby = hobbyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Hobby not found"));
-        existHobby.setType(hobbyDTO.type());
-
-        return new HobbyDTO(hobbyRepository.save(existHobby).getType());
-    }
+    public HobbyDTO update(Long id, HobbyDTO userDTO) {
+        Hobby hobby = hobbyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("passport not found"));
+        hobby.setType(hobby.getType());
+        hobby.setId(hobby.getId());
+        hobby.setUsers(hobby.getUsers());
+        hobbyRepository.save(hobby);
+        return HobbyDTO.builder().type(hobby.getType()).build();      }
 
     @Override
     public void delete(Long id) {
         hobbyRepository.deleteById(id);
+
     }
 }

@@ -3,7 +3,10 @@ package com.example.demo.controllers;
 import com.example.demo.DTO.HobbyDTO;
 import com.example.demo.services.HobbyService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,50 +14,101 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/hobby")
-@Tag(name = "Hobby API", description = "CRUD операции для Hobby")
+@RequiredArgsConstructor
+@RequestMapping("/api/Hobby")
 public class HobbyController {
-    private final HobbyService hobbyService;
-    @Operation(summary = "Find all Hobby", tags = {"Hobby"}, description = "Find all Hobbies for users", responses = {
-            @ApiResponse(responseCode = "200", description = "Hobbies found successfully")
+    private final HobbyService HobbyService;
+
+    @Operation(
+            summary = "Get Hobby by ID",
+            description = "Retrieve a specific Hobby by its unique identifier"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Hobby found and returned",
+                    content = @Content(schema = @Schema(implementation = HobbyDTO.class))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Hobby not found",
+                    content = @Content)
     })
-    @GetMapping
-    public ResponseEntity<List<HobbyDTO>> getHobbies() {
-        return ResponseEntity.ok().body(hobbyService.getAll());
-    }
-    
-    @Operation(summary = "Find Hobby", tags = {"Hobby"}, description = "Find Hobby by id", responses = {
-            @ApiResponse(responseCode = "200", description = "Hobby was found successfully"),
-            @ApiResponse(responseCode = "404", description = "Hobby not found")})
     @GetMapping("/{id}")
     public ResponseEntity<HobbyDTO> getHobbyById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(hobbyService.findById(id));
+        return ResponseEntity.ok().body(HobbyService.findById(id));
     }
-    
-    @Operation(summary = "Create Hobby", tags = {"Hobby"}, description = "Create new Hobby for users", responses = {
-            @ApiResponse(responseCode = "200", description = "Hobby was created successfully")
+
+    @Operation(
+            summary = "Get all Hobbys",
+            description = "Retrieve a list of all Hobbys"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successfully retrieved list of Hobbys",
+            content = @Content(schema = @Schema(implementation = HobbyDTO.class)))
+    @GetMapping
+    public ResponseEntity<List<HobbyDTO>> getHobbys() {
+        return ResponseEntity.ok().body(HobbyService.getAll());
+    }
+
+    @Operation(
+            summary = "Create new Hobby",
+            description = "Create a new Hobby record"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Hobby created successfully",
+                    content = @Content(schema = @Schema(implementation = HobbyDTO.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input",
+                    content = @Content)
     })
     @PostMapping
-    public ResponseEntity<HobbyDTO> createHobby(@RequestBody HobbyDTO hobbyDTO) {
-        return ResponseEntity.ok().body(hobbyService.create(hobbyDTO));
+    public ResponseEntity<HobbyDTO> createHobby(@RequestBody HobbyDTO HobbyDTO) {
+        return ResponseEntity.ok().body(HobbyService.create(HobbyDTO));
     }
 
-    @Operation(summary = "Update Hobby", tags = {"Hobby"}, description = "Update Hobby by id", responses = {
-            @ApiResponse(responseCode = "200", description = "Hobby was updated successfully"),
-            @ApiResponse(responseCode = "404", description = "Hobby not found")})
+    @Operation(
+            summary = "Update Hobby",
+            description = "Update an existing Hobby by its ID"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Hobby updated successfully",
+                    content = @Content(schema = @Schema(implementation = HobbyDTO.class))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Hobby not found",
+                    content = @Content),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input",
+                    content = @Content)
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<HobbyDTO> updateHobby(@PathVariable Long id, @RequestBody HobbyDTO hobbyDTO) {
-        return ResponseEntity.ok().body(hobbyService.update(id, hobbyDTO));
+    public ResponseEntity<HobbyDTO> updateHobby(@PathVariable Long id, @RequestBody HobbyDTO HobbyDTO) {
+        return ResponseEntity.ok().body(HobbyService.update(id, HobbyDTO));
     }
 
-    @Operation(summary = "Delete Hobby", tags = {"Hobby"}, description = "Delete Hobby by id", responses = {
-            @ApiResponse(responseCode = "200", description = "Hobby was deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Hobby not found")})
+    @Operation(
+            summary = "Delete Hobby",
+            description = "Delete a Hobby by its ID"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Hobby deleted successfully"),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Hobby not found")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<HobbyDTO> deleteHobby(@PathVariable Long id) {
-        hobbyService.delete(id);
+        HobbyService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

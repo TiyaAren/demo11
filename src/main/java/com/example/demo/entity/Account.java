@@ -3,21 +3,21 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@RequiredArgsConstructor
+@Builder
 @Entity
 @Table(schema = "users_schema", name = "t_accounts")
 public class Account {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "t_title")
+    @Column(name = "c_title")
     String title;
 
     @ManyToOne
-    @JoinColumn(name = "c_users_id")
+    @JoinColumn(name = "c_user_id")
     User user;
 }

@@ -10,42 +10,45 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-@Transactional
+import java.util.stream.Collectors;
+
 @Service
+@Transactional
+
 @RequiredArgsConstructor
 public class PassportServiceImpl implements PassportService {
-    private final PassportRepository repository;
+    private final PassportRepository passportRepository;
 
-    @Override
-    public PassportDTO create(PassportDTO DTO) {
-        Passport passport = Passport.builder().number(DTO.number()).build();
-        return new PassportDTO(repository.save(passport).getNumber());
+    public PassportDTO create(PassportDTO passportDTO){
+        Passport passport= passportRepository.save(Passport.builder().number(passportDTO.number()).build());
+        return PassportDTO.builder().number(passport.getNumber()).build();
+
     }
 
-    @Override
     public PassportDTO findById(Long id) {
-        return repository.findById(id)
-                .map(p -> new PassportDTO(p.getNumber()))
-                .orElseThrow(() -> new NoSuchElementException("Passport not found"));
+        return PassportDTO.builder()
+                .number(passportRepository.findById(id)
+                        .orElseThrow(() -> new NoSuchElementException("passport not found"))
+                        .getNumber()).build();
+    }
+
+    public List<PassportDTO> getAll(){
+        return passportRepository.findAll().stream()
+                .map(passport -> PassportDTO.builder()
+                        .number(passport.getNumber()).build())
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<PassportDTO> getAll() {
-        return repository.findAll().stream()
-                .map(p -> new PassportDTO(p.getNumber()))
-                .toList();
+    public PassportDTO update(Long id, PassportDTO passportDTO) {
+        Passport passport = passportRepository.findById(id).orElseThrow(() -> new NoSuchElementException("passport not found"));
+        passport.setNumber(passportDTO.number());
+        passportRepository.save(passport);
+        return PassportDTO.builder().number(passport.getNumber()).build();    }
+
+
+    public void delete(Long id){
+        passportRepository.deleteById(id);
     }
 
-    @Override
-    public PassportDTO update(Long id, PassportDTO DTO) {
-        Passport passport = repository.findById(id).orElseThrow(() -> new NoSuchElementException("Passport not found"));
-        passport.setNumber(DTO.number());
-        return new PassportDTO(repository.save(passport).getNumber());
-    }
-
-    @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
-    }
 }
-

@@ -10,43 +10,48 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-@Transactional
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountServiceImpl implements AccountService {
-
     private final AccountRepository accountRepository;
 
+
     @Override
-    public AccountDTO create(AccountDTO accountDTO) {
-        return new AccountDTO(accountRepository.save(Account.builder().title(accountDTO.title()).build()).getTitle());
+    public AccountDTO create(AccountDTO user) {
+        Account account = accountRepository.save(Account.builder().title(user.title()).build());
+        return AccountDTO.builder().title(account.getTitle()).build();
     }
 
-
-    @Override
     public AccountDTO findById(Long id) {
-        return accountRepository.findById(id)
-                .map(account -> new AccountDTO(account.getTitle()))
-                .orElseThrow(() -> new NoSuchElementException("Account not found"));
+        return AccountDTO.builder()
+                .title(accountRepository.findById(id)
+                        .orElseThrow(() -> new NoSuchElementException("account not found"))
+                        .getTitle()).build();
     }
 
     @Override
     public List<AccountDTO> getAll() {
         return accountRepository.findAll().stream()
-                .map(account -> new AccountDTO(account.getTitle()))
-                .toList();
+                .map(account -> AccountDTO.builder()
+                        .title(account.getTitle()).build())
+                .collect(Collectors.toList());
     }
 
     @Override
     public AccountDTO update(Long id, AccountDTO accountDTO) {
-        Account account = accountRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Hobby not found"));
+        Account account = accountRepository.findById(id).orElseThrow(() -> new NoSuchElementException("account not found"));
         account.setTitle(accountDTO.title());
-        return new AccountDTO(accountRepository.save(account).getTitle());
+        accountRepository.save(account);
+        return AccountDTO.builder().title(account.getTitle()).build();
     }
 
-    @Override
+
     public void delete(Long id) {
         accountRepository.deleteById(id);
     }
+
+
 }

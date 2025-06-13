@@ -1,10 +1,16 @@
 package com.example.demo.DTO;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
+@Builder
 public record HobbyDTO(
         @NotNull
-        @Size(min = 2,max = 50)
-        String type) {
+                @Min(2)
+                @Max(50)
+        String type
+
+        ) {
 }

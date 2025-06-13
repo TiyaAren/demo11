@@ -4,11 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Set;
-@Builder
+
 @Data
+
 @AllArgsConstructor
 @NoArgsConstructor
-//@RequiredArgsConstructor
+@Builder
 @Entity
 @Table(schema = "users_schema", name = "t_hobbies")
 public class Hobby {
