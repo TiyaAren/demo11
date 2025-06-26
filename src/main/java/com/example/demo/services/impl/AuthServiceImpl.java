@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final CredentialsRepository credentialsRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -26,13 +26,14 @@ public class AuthServiceImpl implements AuthService {
         user.setName(registerRequest.name());
         user.setAge(registerRequest.age());
 
-        Credentials credentials = new Credentials();
-        credentials.setUsername(registerRequest.name());
-        credentials.setPassword(passwordEncoder.encode(registerRequest.password()));
-        credentials.setRole(new Role().builder().name("ROLE_USER").build());
-        credentials.setUser(user);
-        userRepository.save(user);
-        credentialsRepository.save(credentials);
-    }
+        Role role = roleRepository.findByName("ROLE_USER").orElseThrow(()->new RuntimeException("Role not found"));
 
+        Credentials credential = new Credentials();
+        credential.setUsername(registerRequest.name());
+        credential.setPassword(passwordEncoder.encode(registerRequest.password()));
+        credential.setRole(role);
+        credential.setUser(user);
+
+        credentialsRepository.save(credential);
+    }
 }
