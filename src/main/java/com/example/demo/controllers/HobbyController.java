@@ -17,6 +17,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/Hobby")
+@Tag(name= "Hobby API", description = "CRUD операции для хобби")
+
 public class HobbyController {
     private final HobbyService HobbyService;
 

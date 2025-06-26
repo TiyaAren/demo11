@@ -17,6 +17,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/passport")
+@Tag(name= "Passport API", description = "CRUD операции для passport")
+
 public class PassportController {
     private final PassportService passportService;
 
