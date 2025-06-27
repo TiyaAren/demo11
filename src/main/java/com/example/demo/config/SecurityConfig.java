@@ -3,6 +3,7 @@ package com.example.demo.config;
 import com.example.demo.entity.Credentials;
 
 import com.example.demo.repositories.CredentialsRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -25,7 +26,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    UserDetailsService userDetailsService(CredentialsRepository credentialsRepository) {
+    public UserDetailsService userDetailsService(CredentialsRepository credentialsRepository) {
         return username -> {
             Credentials credentials = credentialsRepository.findByUserName(username)
                     .orElseThrow(() -> new UsernameNotFoundException(username));
@@ -43,11 +44,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/swagger-ui/", "/v3/api-docs/").permitAll()
+                        .requestMatchers("/api/auth/register", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources", "/webjars", "/swagger-ui.html").permitAll()
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults());
+
+                .httpBasic(Customizer.withDefaults())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.getWriter().write("Logout successful");
+                        }));
+
         return http.build();
     }
 }
