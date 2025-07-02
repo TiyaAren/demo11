@@ -22,3 +22,5 @@ springdoc:
     enabled: true
   api-docs:
     path: /v3/api-docs
+jwt:
+  secret: 7a9583018f5e677a9583018f5e67b1b393b91519bd5ae9b1b393b91519bd5ae9
