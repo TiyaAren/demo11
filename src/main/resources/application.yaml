@@ -7,20 +7,25 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    schemas:
+      - public
+    baseline-on-migrate: true
+    driver-class-name: org.postgresql.Driver
 
 server:
   port: 8081
-  address: 0.0.0.0  # ← Critical change (allows external access)
 
-# Swagger specific config
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
   api-docs:
     path: /v3/api-docs
+
+logging:
+  level:
+    sql: info
+    org.springframework.security: DEBUG
 jwt:
-  secret: 7a9583018f5e677a9583018f5e67b1b393b91519bd5ae9b1b393b91519bd5ae97a9583018f5e677a95857b1b393b9151993b91519bd5ae9
+  secret: 8dc3e0e6fe23d1c4be967fbf11c960ea70189b42e1f0b15723e1a68a2c142b6bw4eTsDqZh6J8dc3e0e6fe23d1cb6bw4eTsDqZh6J
