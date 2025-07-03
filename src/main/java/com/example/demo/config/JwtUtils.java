@@ -4,15 +4,15 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-
+import org.springframework.stereotype.Component;
 import java.util.Date;
-import java.util.jar.JarException;
 
+@Component
 public class JwtUtils {
     @Value("${jwt.secret}")
     String jwtSecret;
-    private final long accessTokenExpiresIn = 60000 * 15;
-    private final long refreshTokenExpiresIn = 60000 * 60 * 15;
+    private final long accessTokenExpiresIn = 60000 * 15; //1000 * 60 *15
+    private final long refreshTokenExpiresIn = 60000 * 60 * 24;
 
     public String generateAccessToken(String username) {
         return generateToken(username, accessTokenExpiresIn);
@@ -33,7 +33,6 @@ public class JwtUtils {
 
     public String extractUsername(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).build().parseClaimsJws(token).getBody().getSubject();
-
     }
 
     public boolean isTokenValid(String token) {
@@ -44,5 +43,4 @@ public class JwtUtils {
             return false;
         }
     }
-
 }

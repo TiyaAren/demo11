@@ -13,6 +13,7 @@ import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.AuthService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,32 +29,36 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtils jwtUtils;
 
     @Override
-    public void register(RegisterRequest registerRequest) {
+    public void register(RegisterRequest request) {
         User user = new User();
-        user.setName(registerRequest.name());
-        user.setAge(registerRequest.age());
+        user.setName(request.name());
+        user.setAge(request.age());
 
-        Role role = roleRepository.findByName("ROLE_USER").orElseThrow(() -> new RuntimeException("Role not found"));
+        Role role = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
 
-        Credentials credential = new Credentials();
-        credential.setUsername(registerRequest.name());
-        credential.setPassword(passwordEncoder.encode(registerRequest.password()));
-        credential.setRole(role);
-        credential.setUser(user);
+        Credentials credentials = new Credentials();
+        credentials.setUsername(request.username());
+        credentials.setPassword(passwordEncoder.encode(request.password()));
+        credentials.setRole(role);
+        credentials.setUser(user);
 
-        credentialsRepository.save(credential);
+        userRepository.save(user);
+        credentialsRepository.save(credentials);
     }
 
     @Override
     public JwtResponse login(LoginRequest request) {
         Credentials credentials = credentialsRepository.findByUserName(request.username())
-                .orElseThrow(() -> new UsernameNotFoundException("Usert not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
         if (!passwordEncoder.matches(request.password(), credentials.getPassword())) {
             throw new BadCredentialsException("Invalid password");
-
         }
+
         String access = jwtUtils.generateAccessToken(request.username());
         String refresh = jwtUtils.generateRefreshToken(request.username());
+
         return new JwtResponse(access, refresh);
     }
 
@@ -64,9 +69,6 @@ public class AuthServiceImpl implements AuthService {
         }
         String username = jwtUtils.extractUsername(request.refreshToken());
         String newAccess = jwtUtils.generateAccessToken(username);
-
         return new JwtResponse(newAccess, request.refreshToken());
     }
-
-
 }
